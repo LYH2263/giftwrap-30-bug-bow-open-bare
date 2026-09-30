@@ -1,0 +1,12 @@
+from fastapi import APIRouter, Query
+from app.schemas.estimate import EstimateRequest
+from app.services import estimate_service
+router = APIRouter()
+@router.get("/estimate")
+def get_est(box_id: int = Query(...), overlap: float | None = None, wrap_style: str = "cross",
+            bow_enabled: bool = False, bow_m: float | None = None, save: bool = False):
+    return estimate_service.run_estimate(box_id, overlap, wrap_style, bow_enabled, bow_m, save, "")
+@router.post("/estimate")
+def post_est(body: EstimateRequest):
+    return estimate_service.run_estimate(body.box_id, body.overlap, body.wrap_style,
+                                         body.bow_enabled, body.bow_m, body.save, body.note)
