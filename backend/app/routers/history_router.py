@@ -1,4 +1,3 @@
-# open helpers: bug_bow_open_bare_open_helpers
 from fastapi import APIRouter, HTTPException
 from app.repositories import history as repo
 router = APIRouter()

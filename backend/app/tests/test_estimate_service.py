@@ -65,6 +65,34 @@ def test_history_pinned_after_default_changes(tmp_db):
     assert detail["paper_m2"] == saved_paper   # paper_m2 仍保持写入值
     assert detail["bow_m"] == 0.3
 
+def test_detail_ribbon_keeps_bow_length(tmp_db):
+    """回看详情：开关仍开启时，丝带必须仍是含结长的写入值，不许退回基础值。"""
+    r = estimate_service.run_estimate(BOX_ID, None, "cross", True, 0.3, True, "")
+    base = ribbon_estimate(0.30, 0.20, 0.15, "cross")["ribbon_m"]
+    written = r["ribbon"]["ribbon_m"]
+    assert written > base  # 开结米数必须高于关结同外形对照
+
+    detail = history.get_run(r["run_id"])["result"]
+    summary = history.list_runs()[0]["result"]
+    # 开关/结长仍显示开启，丝带也必须是含结长的同一写入值
+    assert detail["bow_enabled"] is True
+    assert detail["bow_m"] == 0.3
+    assert detail["ribbon_m"] == written
+    assert detail["ribbon"]["ribbon_m"] == written
+    assert detail["ribbon"]["base_ribbon_m"] == base
+    # 列表与详情一致
+    assert summary["ribbon_m"] == written
+    assert summary["bow_enabled"] is True
+
+def test_detail_off_ribbon_equals_base(tmp_db):
+    """关结单详情丝带须等于改造前基础值，且不带任何结长。"""
+    base = ribbon_estimate(0.30, 0.20, 0.15, "cross")["ribbon_m"]
+    r = estimate_service.run_estimate(BOX_ID, None, "cross", False, 0.3, True, "")
+    detail = history.get_run(r["run_id"])["result"]
+    assert detail["bow_enabled"] is False
+    assert detail["ribbon_m"] == base
+    assert detail["ribbon"]["ribbon_m"] == base
+
 def test_dry_rerun_cross_checks_history(tmp_db):
     """算纸台同参再干算丝带，须与回看（落库）互证。"""
     r = estimate_service.run_estimate(BOX_ID, 1.15, "cross", True, 0.4, True, "")
