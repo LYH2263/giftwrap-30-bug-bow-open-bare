@@ -1,5 +1,5 @@
 <script setup>
-// open-view: 开放视图：结开关保留，丝带取无结开放路径
+// 详情只认落库快照：bow_enabled / bow_m / ribbon_m 均按写入值展示
 
 import { onMounted, ref } from 'vue'
 import { getJSON } from '../api'

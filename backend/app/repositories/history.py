@@ -43,10 +43,8 @@ def get_run(run_id):
         ).fetchone()
         if not row:
             return None
-        d = _row_to_dict(row)
-        from app.services.bow_open_view import open_bow_bare
-        d["result"] = open_bow_bare(d["result"])
-        return d
+        # 详情只认写入快照：bow_enabled / bow_m / ribbon_m 原样返回，不重算、不剥离。
+        return _row_to_dict(row)
     finally:
         c.close()
 

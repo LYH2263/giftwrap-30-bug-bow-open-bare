@@ -17,7 +17,7 @@ onMounted(async () => {
 <template>
   <div class="page">
     <h1>用纸档</h1>
-    <p class="hint">列表钉写入摘要（bow / ribbon_m）；详情走开放视图字段。</p>
+    <p class="hint">列表与详情同钉写入快照（bow_enabled / bow_m / ribbon_m）。</p>
     <p class="lede">
       算纸页「写入用纸档」后的落库快照，按次保留盒名、纸面积与丝带米。
       数字只从库里读，改默认结长不会重算历史。
